@@ -3,9 +3,8 @@ fn main() {
     let mut position = 50;
     let directions = read_file();
     let mut solution = 0;
-    let mut start_on_zero = false;
     for direction in &directions {
-        start_on_zero = false;
+        let mut start_on_zero = false;
         if position == 0 {
             start_on_zero = true;
         }
