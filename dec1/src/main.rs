@@ -3,36 +3,32 @@ fn main() {
     let mut position = 50;
     let directions = read_file();
     let mut solution = 0;
-    let mut boop = false;
+    let mut start_on_zero = false;
     for direction in &directions {
-        boop = false;
+        start_on_zero = false;
         if position == 0 {
-            boop = true;
+            start_on_zero = true;
         }
         let steps = parse_direction(&direction);
         solution += steps.abs()/100;
         let offset = steps%100;
-        
-        println!("Direction: {} Starting Position: {}", direction, position);
         position = position + offset;
         
         if position < 0 {
             position = 100 + position;
-            if !boop {
+            if !start_on_zero {
                 solution += 1;
             }
         } else if position > 99 {
             position = position - 100;
-            if !boop {
+            if !start_on_zero {
                 solution += 1;
             }
-        } else if position == 0 && !boop {
+        } else if position == 0 && !start_on_zero {
             solution += 1;
         }
-        println!("Position {} Solution {}", position, solution)
     }
     println!("Solution: {}", solution);
-    println!("Directions: {}", directions.len());
 }
 
 fn read_file() -> Vec<String> {
