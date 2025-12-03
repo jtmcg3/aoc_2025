@@ -36,12 +36,33 @@ fn list_of_tuples_from_list_of_strings(input: &Vec<String>) -> Vec<(u64, u64)> {
 fn is_invalid(input: u64) -> bool {
     // convert to string for easier parsing
     let input_str = input.to_string();
+    /* Part 1
     if input_str.len() % 2 == 0 {
         let span = input_str.len() / 2;
         let first = &input_str[0..span];
         let second = &input_str[span..];
         if first == second {
             return true;
+        }
+    }
+    false*/
+
+    // Part 2. 123123123
+    for i in 1..=input_str.len() {
+        if input_str.len() % i == 0 { // i = 3
+            let first = &input_str[0..i]; // 123
+            let mut count = 1;
+            for j in 1..(input_str.len()/i) { // j = 1, 2
+                let test = &input_str[i*j..i*(j+1)]; // [3..6], [6..9]
+                if test != first {
+                    break;
+                } else {
+                    count += 1;
+                    if count == input_str.len()/i {
+                        return true;
+                    }
+                }
+            }
         }
     }
     false
