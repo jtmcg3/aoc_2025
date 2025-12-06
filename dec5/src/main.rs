@@ -8,14 +8,15 @@ fn main() {
     //println!("Fresh ranges: {:?}", fresh_ranges);
     //println!("Ingredients: {:?}", ingredients);
 
-    // set to track fresh ingredients
-    let mut fresh_ingredients = HashSet::new();
+    //set to track fresh ingredients
+    //let mut fresh_ingredients = HashSet::new();
 
     // iterate l to r
     // if start greater than ingredient, break
     // if greater than start
     //.   if ingredient less than or equal to end, add to fresh set
     //.   if ingredient greater than end, continue
+    /* Part 1
     for ingredient in ingredients {
         for range in &fresh_ranges {
             if range.0 > ingredient {
@@ -32,6 +33,26 @@ fn main() {
     }
     println!("Fresh ingredients: {:?}", fresh_ingredients);
     println!("Number of fresh ingredients: {}", fresh_ingredients.len());
+    */
+
+    //Part 2
+
+    /*
+    for range in &fresh_ranges {
+        for i in range.0..=range.1 {
+            fresh_ingredients.insert(i);
+        }
+    }
+    println!("Fresh ingredients: {:?}", fresh_ingredients);
+    println!("Number of fresh ingredients: {}", fresh_ingredients.len());
+    */
+
+    // alt part 2
+    let merged_ranges = merge_ranges(fresh_ranges);
+    println!("Merged ranges: {:?}", merged_ranges);
+    println!("Number of merged ranges: {}", merged_ranges.len());
+    let count = count_fresh_ingredients(merged_ranges);
+    println!("Number of fresh ingredients: {}", count);
 }
 
 fn read_file(input: &str) -> Vec<String> {
@@ -54,6 +75,31 @@ fn parse_file(input: &Vec<String>) -> (Vec<(usize, usize)>, Vec<usize>) {
         }
     }
     (fresh_ranges, ingredients)
+}
+
+fn merge_ranges(ranges: Vec<(usize, usize)>) -> Vec<(usize, usize)> {
+    // this function isn't working- it's removing some ranges   
+    // the incoming ranges are sorted by start
+    let mut merged_ranges = Vec::new();
+    let mut current_range = ranges[0];
+    for range in ranges.iter().skip(1) {
+        if range.0 <= current_range.1 {
+            current_range.1 = std::cmp::max(range.1, current_range.1);
+        } else {
+            merged_ranges.push(current_range);
+            current_range = *range;
+        }
+    }
+    merged_ranges.push(current_range);
+    merged_ranges
+}
+
+fn count_fresh_ingredients(fresh_ranges: Vec<(usize, usize)>)->usize {
+    let mut count = 0;
+    for range in fresh_ranges {
+        count += range.1 - range.0 + 1;
+    }
+    count
 }
 
 
