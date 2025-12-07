@@ -3,7 +3,7 @@ fn main() {
     //print_problem(&graph);
     let start = find_start(&graph[0]);
     println!("Start: {}", start);
-    let count = recursive_beam(&mut graph, start, 1);
+    let count = many_worlds_backtracker(&mut graph, start, 1);
     println!("Count: {}", count);
     //print_problem(&graph);
 }
@@ -64,3 +64,37 @@ fn recursive_beam(graph: &mut Vec<String>, col: usize, row: usize) -> i64 {
 }
 
             
+// i believe the solution for part 2 is by using backtracking
+
+use std::collections::HashMap;
+
+fn many_worlds_backtracker(graph: &Vec<String>, col: usize, row: usize) -> i64 {
+    let mut cache: HashMap<(usize, usize), i64> = HashMap::new();
+
+    fn backtracking(graph: &Vec<String>, col: usize, row: usize, cache: &mut HashMap<(usize, usize), i64>) -> i64 {
+        if let Some(&count) = cache.get(&(col, row)) {
+            return count;
+        }
+
+        if row >= graph.len() - 1 {
+            return 1;
+        }
+
+        let mut count = 0;
+        match graph[row].chars().nth(col).unwrap() {
+            '.' => {
+                count += backtracking(graph, col, row + 1, cache);
+            },
+            '^' => {
+                count += backtracking(graph, col + 1, row + 1, cache);
+                count += backtracking(graph, col - 1, row + 1, cache);
+            },
+            _ => panic!("OH-NO!")
+        }
+        
+        cache.insert((col, row), count);
+        count
+    }
+
+    backtracking(graph, col, row, &mut cache)
+}
